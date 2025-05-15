@@ -1,5 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
+import { redirect } from "next/navigation";
 
 import { getBlockedUsers } from "@/lib/block-service";
 
@@ -7,7 +8,13 @@ import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
 
 export default async function CommunityPage() {
-  const blockedUsers = await getBlockedUsers();
+  let blockedUsers = [];
+
+  try {
+    blockedUsers = await getBlockedUsers();
+  } catch {
+    redirect("/sign-in");
+  }
 
   const formattedData = blockedUsers.map((block) => ({
     ...block,
