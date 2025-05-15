@@ -1,5 +1,6 @@
 import React from "react";
 import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 import { getUserByUsername } from "@/lib/user-service";
 import { StreamPlayer } from "@/components/stream-player";
