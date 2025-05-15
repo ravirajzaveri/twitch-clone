@@ -1,4 +1,5 @@
 import React from "react";
+import { redirect } from "next/navigation";
 
 import { getSelf } from "@/lib/auth-service";
 import { getStreamByUserId } from "@/lib/stream-service";
@@ -8,11 +9,18 @@ import { KeyCard } from "./_components/key-card";
 import { ConnectModal } from "./_components/connect-modal";
 
 export default async function KeysPage() {
-  const self = await getSelf();
-  const stream = await getStreamByUserId(self.id);
+  let self;
+  let stream;
+
+  try {
+    self = await getSelf();
+    stream = await getStreamByUserId(self.id);
+  } catch {
+    redirect("/sign-in"); // not signed in
+  }
 
   if (!stream) {
-    throw new Error("No stream found");
+    redirect("/u/" + self.username); // no stream yet, back to dashboard
   }
 
   return (
