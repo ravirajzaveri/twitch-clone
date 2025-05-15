@@ -71,6 +71,7 @@ export async function POST(req: Request) {
         },
       },
     });
+    console.log("Creating user with username:", rawUsername);
 
   }
 
