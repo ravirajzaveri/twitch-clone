@@ -12,9 +12,9 @@ export default async function CreatorPage({
   const externalUser = await currentUser();
   const user = await getUserByUsername(username);
 
-  if (!user || user.externalUserId !== externalUser?.id || !user.stream) {
-    throw new Error("Unauthorized");
-  }
+if (!externalUser || !user || user.externalUserId !== externalUser.id || !user.stream) {
+  redirect("/sign-in");
+}
 
   return (
     <div className="h-full">
