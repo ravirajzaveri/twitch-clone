@@ -5,9 +5,15 @@ import { db } from "@/lib/db";
 export const getSelf = async () => {
   const self = await currentUser();
 
-  if (!self || !self.username) {
-    throw new Error("Unauthorized");
-  }
+if (!self) {
+  throw new Error("Unauthorized");
+}
+
+const fallbackUsername =
+  self.username ??
+  self.firstName ??
+  self.lastName ??
+  "user_" + Math.random().toString(36).substring(2, 6);
 
   const user = await db.user.findUnique({
     where: {
