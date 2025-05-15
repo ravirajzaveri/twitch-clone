@@ -6,8 +6,10 @@ export default authMiddleware({
     "/api/webhooks(.*)",
     "/api/uploadthing",
     "/:username",
+    "/u/:username",      // ✅ this matches dashboard home route
     "/search",
   ],
+
 });
 
 export const config = {
