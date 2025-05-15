@@ -53,18 +53,25 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
+    const rawUsername =
+      payload.data.username ||
+      payload.data.first_name ||
+      payload.data.last_name ||
+      "user_" + Math.random().toString(36).substring(2, 6);
+    
     await db.user.create({
       data: {
         externalUserId: payload.data.id,
-        username: payload.data.username,
+        username: rawUsername,
         imageUrl: payload.data.image_url,
         stream: {
           create: {
-            name: `${payload.data.username}'s stream`,
+            name: `${rawUsername}'s stream`,
           },
         },
       },
     });
+
   }
 
   if (eventType === "user.updated") {
