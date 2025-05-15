@@ -1,4 +1,5 @@
 import React from "react";
+import { redirect } from "next/navigation";
 
 import { getSelf } from "@/lib/auth-service";
 import { getStreamByUserId } from "@/lib/stream-service";
@@ -6,11 +7,18 @@ import { getStreamByUserId } from "@/lib/stream-service";
 import { ToggleCard } from "./_components/toggle-card";
 
 export default async function ChatPage() {
-  const self = await getSelf();
-  const stream = await getStreamByUserId(self.id);
+  let self;
+  let stream;
+
+  try {
+    self = await getSelf();
+    stream = await getStreamByUserId(self.id);
+  } catch {
+    redirect("/sign-in");
+  }
 
   if (!stream) {
-    throw new Error("No stream found");
+    redirect("/u/" + self.username); // or show a message if needed
   }
 
   return (
