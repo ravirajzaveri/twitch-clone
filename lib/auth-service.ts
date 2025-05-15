@@ -1,5 +1,5 @@
 import { currentUser } from "@clerk/nextjs";
-
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 
 export const getSelf = async () => {
@@ -30,22 +30,20 @@ export const getSelf = async () => {
 export const getSelfByUsername = async (username: string) => {
   const self = await currentUser();
 
-  if (!self || !self.username) {
-    throw new Error("Unauthorized");
+  if (!self) {
+    redirect("/sign-in");
   }
 
   const user = await db.user.findUnique({
-    where: {
-      username,
-    },
+    where: { username },
   });
 
   if (!user) {
-    throw new Error("User not found");
+    redirect("/");
   }
 
-  if (self.username !== username) {
-    throw new Error("Unauthorized");
+  if (user.externalUserId !== self.id) {
+    redirect("/sign-in");
   }
 
   return user;
